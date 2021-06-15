@@ -1,0 +1,31 @@
+version: '3.2'
+
+services:
+  mysql.ac.hello:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=admincontrol
+    ports:
+      - 33065:3306
+
+  redis.ac.hello:
+    image: redis
+    command: redis-server --requirepass password
+    restart: always
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    ports:
+      - 63795:6379
+    # volumes:
+      # - $PWD/redis-data:/var/lib/redis
+      # - $PWD/redis.conf:/usr/local/redis/redis.conf
+
+  adminer.ac.hello:
+    image: adminer
+    restart: always
+    ports:
+      - 4088:8080
+
