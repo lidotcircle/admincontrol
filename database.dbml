@@ -1,0 +1,62 @@
+
+Table meeting {
+    id int [pk, increment] // 事件id
+    date date              // 日期
+    title varchar          // 事件标题
+    status int             // 会议状态标识
+    mark int               // 标记类型
+    content varchar        // 会议内容
+    startTime date         // 开始时间
+    endTime date           // 结束时间
+    location varchar       // 会议地点
+    sponsor  varchar       // 发起人
+}
+
+Table attachment {
+    id int [pk, increment] // 附件id
+    name varchar           // 文件名
+    size int               // 文件大小
+    url varchar            // 文件url
+} 
+
+Table meeting_comment {
+  id int [pk, increment]              // 评论id
+  meeting_id int  [ref: > meeting.id] // 会议id(事件id)
+  name varchar                        // 评论人
+  comment varchar                     // 内容
+  time date                           // 评论时间
+}
+
+Table meeting_schedule {
+  id int [pk, increment]             // 议程id
+  meeting_id int [ref: > meeting.id] // 会议id(事件id)
+  name varchar                       // 议程名称
+  content varchar                    // 内容
+  createUser varchar                 // 创建人
+  createTime date                    // 创建时间
+  updateUser varchar                 // 修改人
+  updateTime date                    // 修改时间
+  title      varchar                 // 主题 ??
+  duration   int                     // 时长(分钟)
+  type       int                     // 类型编号
+  csort      int                     // 排序编号
+}
+
+Table meeting_user {
+  id int [pk, increment]             // 会议用户id
+  meeting_id int [ref: > meeting.id] // 会议id(事件id)
+  name varchar                       // 用户名
+  avatar varchar                     // 头像地址
+  status int                         // 阅读状态
+}
+
+Table meeting_attachment {
+  meeting_id int [ref: > meeting.id]      // 会议id
+  attachmnt_id int [ref: > attachment.id] // 附件id
+}
+
+Table schedule_attachment {
+  schedule_id int [ref: > meeting_schedule.id] // 议程id
+  attachment_id int [ref: > attachment.id]     // 附件id
+}
+
