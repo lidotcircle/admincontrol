@@ -53,7 +53,7 @@ export async function meeting_handler(cmds: string[]) {
     switch(cmd) {
         case "create":
             if(cmds[0] == '-h' || cmds[0] == '--help') {
-                console.log(`Usage: request.js meeting [command]\n\n` + 
+                console.log(`Usage: request.js meeting create [options]\n\n` + 
                             generateAgrvHelp(creationArgvSpec, 120, 4).join('\n'));
                 return;
             }
