@@ -1,13 +1,16 @@
 package hello.admincontrol.entity;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -31,6 +34,7 @@ public class Meeting implements Serializable {
     @Column(name = "gmt_modified", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false, updatable = false)
     private Date modifiedDate;
 
+    @Column(nullable = false)
     private Date date;
     public Date getDate() {
         return this.date;
@@ -39,6 +43,7 @@ public class Meeting implements Serializable {
         this.date = date;
     }
 
+    @Column(nullable = false)
     private String title;
     public String getTitle() {
         return this.title;
@@ -95,6 +100,7 @@ public class Meeting implements Serializable {
         this.location = location;
     }
 
+    @Column(nullable = false)
     private String sponsor;
     public String getSponsor() {
         return this.sponsor;
@@ -112,12 +118,13 @@ public class Meeting implements Serializable {
         this.attachments = attachments;
     }
 
-    @OneToMany(mappedBy = "meeting")
-    private Collection<MeetingComment> comments;
-    public Collection<MeetingComment> getComments() {
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "meeting_id")
+    private List<MeetingComment> comments;
+    public List<MeetingComment> getComments() {
         return this.comments;
     }
-    public void setComments(Collection<MeetingComment> comments) {
+    public void setComments(List<MeetingComment> comments) {
         this.comments = comments;
     }
 

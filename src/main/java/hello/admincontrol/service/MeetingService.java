@@ -1,15 +1,19 @@
 package hello.admincontrol.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Collection;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import hello.admincontrol.entity.Attachment;
+import hello.admincontrol.entity.Meeting;
 import hello.admincontrol.entity.MeetingComment;
 import hello.admincontrol.entity.MeetingSchedule;
 import hello.admincontrol.entity.MeetingUser;
 import hello.admincontrol.exception.NotFound;
+import hello.admincontrol.utils.ObjUtil;
 
 
 public interface MeetingService {
@@ -39,6 +43,10 @@ public interface MeetingService {
         }
         public void setMark(int mark) {
             this.mark = mark;
+        }
+
+        public MeetingShort(Meeting mt) {
+            ObjUtil.assignFields(this, mt);
         }
     } //}
     Collection<MeetingShort> latestCalenderThirtyDay(String username);
@@ -94,9 +102,14 @@ public interface MeetingService {
         public void setLocation(String location) {
             this.location = location;
         }
+
+        public MeetingMedium(Meeting mt) {
+            super(mt);
+        }
     } //}
     Collection<MeetingMedium> calenderIn(String username, Date day);
 
+    /* username == null bypass user constraint */
     public static class MeetingDetail extends MeetingMedium //{
     {
         private String sponsor;
@@ -115,11 +128,11 @@ public interface MeetingService {
             this.attachments = attachments;
         }
 
-        private Collection<MeetingComment> comments;
-        public Collection<MeetingComment> getComments() {
+        private List<MeetingComment> comments;
+        public List<MeetingComment> getComments() {
             return this.comments;
         }
-        public void setComments(Collection<MeetingComment> comments) {
+        public void setComments(List<MeetingComment> comments) {
             this.comments = comments;
         }
 
@@ -137,6 +150,13 @@ public interface MeetingService {
         }
         public void setUsers(Collection<MeetingUser> users) {
             this.users = users;
+        }
+
+        public MeetingDetail(Meeting mt) {
+            super(mt);
+            this.attachments = new ArrayList<>();
+
+            mt.getAttachments().forEach(attach -> this.attachments.add(attach.getAttachment()));
         }
     } //}
     MeetingDetail meetingDetail(String username, long meetingId);
@@ -237,5 +257,7 @@ public interface MeetingService {
     } //}
     void editMeeting(MeetingEdition meeting) throws NotFound;
 
+    void addComment(String username, long meetingId, MeetingComment comment);
+    void removeComment(long meetingId, int index);
 }
 
