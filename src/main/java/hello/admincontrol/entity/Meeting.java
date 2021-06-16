@@ -137,7 +137,8 @@ public class Meeting implements Serializable {
         this.schedule = schedule;
     }
 
-    @OneToMany(mappedBy = "meeting")
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "meeting_id")
     private Collection<MeetingUser> users;
     public Collection<MeetingUser> getUsers() {
         return this.users;
