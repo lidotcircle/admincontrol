@@ -5,10 +5,12 @@ import java.util.Date;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -102,6 +104,8 @@ public class MeetingCrud {
             this.attachments = attachments;
         }
 
+        @NotNull
+        @Pattern(regexp = ".{1,}")
         private String sponsor;
         public String getSponsor() {
             return this.sponsor;
@@ -129,6 +133,20 @@ public class MeetingCrud {
     @GetMapping()
     private MeetingService.MeetingDetail getMeeting(@RequestParam("meetingId") int meetingId) {
         return mtService.meetingDetail(null, meetingId);
+    }
+
+
+    @GetMapping("/latest-thirty-days")
+    private Collection<MeetingService.MeetingShort> getLatestThirtyDays() {
+        final String username = "ldy"; // TODO
+        return this.mtService.latestCalenderThirtyDay(username);
+    }
+
+    @GetMapping("/day-list")
+    private Collection<MeetingService.MeetingMedium> getSpecificDay(
+            @RequestParam() @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+        final String username = "ldy"; // TODO
+        return this.mtService.calenderIn(username, date);
     }
 }
 

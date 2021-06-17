@@ -46,17 +46,18 @@ public class MeetingServiceImpl implements MeetingService {
     private MeetingScheduleRepository mtscResp;
 
 
-    private Collection<Meeting> meetingsInDays(String username, int days) {
-        final Instant nowins = Instant.now().truncatedTo(ChronoUnit.DAYS);
-        final Date now = Date.from(nowins);
-        final Date end = Date.from(nowins.plus(days, ChronoUnit.DAYS));
-        final Collection<Meeting> qlist = this.mtResp.findByUsers_NameOrSponsorAndDateBetween(username, now, end);
+    private Collection<Meeting> meetingsBetween(String username, Date start, Date end) {
+        final Collection<Meeting> qlist = this.mtResp.findByUsers_NameOrSponsorAndDateBetween(username, start, end);
         return qlist;
     }
 
 	@Override
 	public Collection<MeetingShort> latestCalenderThirtyDay(String username) {
-        final Collection<Meeting> qlist = this.meetingsInDays(username, 30);
+        final Instant nowins = Instant.now().truncatedTo(ChronoUnit.DAYS);
+        final Date now = Date.from(nowins);
+        final Date end = Date.from(nowins.plus(30, ChronoUnit.DAYS));
+
+        final Collection<Meeting> qlist = this.meetingsBetween(username, now, end);
         final Collection<MeetingShort> ans = new ArrayList<>();
         qlist.forEach(meeting -> ans.add(new MeetingShort(meeting)));
 
@@ -65,7 +66,11 @@ public class MeetingServiceImpl implements MeetingService {
 
 	@Override
 	public Collection<MeetingMedium> calenderIn(String username, Date day) {
-        final Collection<Meeting> qlist = this.meetingsInDays(username, 1);
+        final Instant dateins = day.toInstant().truncatedTo(ChronoUnit.DAYS);
+        final Date start = Date.from(dateins);
+        final Date end =   Date.from(dateins.plus(1, ChronoUnit.DAYS));
+
+        final Collection<Meeting> qlist = this.meetingsBetween(username, start, end);
         final Collection<MeetingMedium> ans = new ArrayList<>();
         qlist.forEach(meeting -> ans.add(new MeetingMedium(meeting)));
 

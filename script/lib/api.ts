@@ -8,6 +8,9 @@ export module API {
 
     export module Meeting {
         export const index = `${endpoint}/meeting`;
+        export const day30 = `${endpoint}/meeting/latest-thirty-days`;
+        export const oneday = `${endpoint}/meeting/day-list`;
+
         export const comment = `${endpoint}/meeting/comment`;
     }
 }
