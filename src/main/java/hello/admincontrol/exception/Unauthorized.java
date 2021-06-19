@@ -10,5 +10,6 @@ public class Unauthorized extends BaseException {
 
     public Unauthorized() {
         super("Unauthorized");
+        this.code = 401;
     }
 }

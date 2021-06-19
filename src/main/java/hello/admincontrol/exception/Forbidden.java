@@ -10,6 +10,7 @@ public class Forbidden extends BaseException {
 
     public Forbidden() {
         super("Forbidden");
+        this.code = 403;
     }
 }
 

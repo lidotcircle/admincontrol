@@ -10,5 +10,6 @@ public class NotFound extends BaseException {
 
     public NotFound() {
         super("NotFound");
+        this.code = 404;
     }
 }
