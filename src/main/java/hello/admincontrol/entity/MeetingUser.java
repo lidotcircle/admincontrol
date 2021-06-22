@@ -10,6 +10,9 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
+/**
+ * 参加会议的用户表
+ */
 @Entity
 @Table(name = "tbl_meeting_user")
 public class MeetingUser implements Serializable {

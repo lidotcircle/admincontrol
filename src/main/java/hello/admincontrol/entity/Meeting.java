@@ -15,6 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
+/**
+ * 会议表
+ */
 @Entity
 @Table(name = "tbl_meeting")
 public class Meeting implements Serializable {

@@ -12,6 +12,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
+/**
+ * 会议的议程表, 和会议表是多对一的关系, 即每一个会议可以有多个议程
+ */
 @Entity
 @Table(name = "tbl_meeting_schedule")
 public class MeetingSchedule implements Serializable {

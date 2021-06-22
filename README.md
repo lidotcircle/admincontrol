@@ -4,6 +4,7 @@
 <!-- vim-markdown-toc GFM -->
 
 * [Start Backend](#start-backend)
+* [异常处理](#异常处理)
 * [APIs](#apis)
     * [会议](#会议)
         * [会议创建](#会议创建)
@@ -18,6 +19,14 @@
 ```bash
 mvn spring-boot:run
 ```
+
+### 异常处理
+
+项目中抛出的异常都要继承[BaseException](./src/main/java/hello/admincontrol/exception/BaseException.java).
+在[ResponseFormatterFilter](./src/main/java/hello/admincontrol/config/ResponseFormatterFilter.java)中会将类型为`BaseException`
+的异常转化为 HTTP 返回体(Resposne Body).
+
+`BaseException`中有`code`和`reason`两个字段, 分别为 HTTP 返回体中的`code`和`msg`字段.
 
 ### APIs
 

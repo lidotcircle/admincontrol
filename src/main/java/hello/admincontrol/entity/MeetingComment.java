@@ -11,6 +11,9 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
+/**
+ * 会议的评论表, 用于储存会议的评论, 包含有评论人({@link MeetingComment.name})
+ */
 @Entity
 @Table(name = "tbl_meeting_comments")
 public class MeetingComment implements Serializable {

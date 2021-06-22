@@ -3,6 +3,9 @@ package hello.admincontrol.config;
 import com.fasterxml.jackson.databind.JsonNode;
 
 
+/**
+ * HTTP 返回体(Response Body)的格式
+ */
 public class ResponseBodyFormat {
     private JsonNode data;
     public JsonNode getData() {

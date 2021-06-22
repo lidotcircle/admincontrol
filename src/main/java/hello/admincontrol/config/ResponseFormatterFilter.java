@@ -15,13 +15,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import hello.admincontrol.exception.BaseException;
 
 
+/**
+ * 用于将HTTP请求的返回转化为{@link ResponseBodyFormat}的格式
+ * HTTP Status Code:
+ *     1. 如果返回体的格式符合 BaseException 那么用 BaseException 中的 code 字段
+ *     2. 不满足则不会改变原有的返回状态码
+ */
 @Component
 public class ResponseFormatterFilter extends OncePerRequestFilter {
     static class FilterServletOutputStream extends ServletOutputStream //{
@@ -95,24 +100,20 @@ public class ResponseFormatterFilter extends OncePerRequestFilter {
         int status = responseWrapper.getStatus();
         byte[] data = responseWrapper.getDataStream();
 
-        if(status >= 400) {
-            response.setStatus(200);
-        }
-
         String msg = null;
         JsonNode j = null;
         try {
             final BaseException e = this.objectMapper.readValue(data, BaseException.class);
             status = e.getCode();
             msg = e.getReason();
+            response.setStatus(status);
         } catch (JsonProcessingException e) {}
 
         if (msg == null) {
             try {
                 j = this.objectMapper.readTree(data);
             } catch (JsonProcessingException e){
-                status = HttpStatus.INTERNAL_SERVER_ERROR.value();
-                msg = HttpStatus.INTERNAL_SERVER_ERROR.toString();
+                msg = new String(data, "UTF-8");
             }
         }
 

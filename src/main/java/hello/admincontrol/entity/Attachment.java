@@ -12,6 +12,10 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
+/**
+ * 附件表, 被会议附件表和议程附件表应用
+ * 注意附件表并没用真正存有文件数据, 只是包含了一个文件的应用.
+ */
 @Entity
 @Table(name = "tbl_attachment")
 public class Attachment implements Serializable {

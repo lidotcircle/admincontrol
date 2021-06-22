@@ -25,6 +25,9 @@ import hello.admincontrol.service.MeetingService.MeetingCreation;
 import hello.admincontrol.utils.ObjUtil;
 
 
+/**
+ * 会议的增删改查接口
+ */
 @RestController
 @RequestMapping("/apis/meeting")
 public class MeetingCrud {

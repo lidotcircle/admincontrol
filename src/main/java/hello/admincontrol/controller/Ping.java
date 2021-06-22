@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+/**
+ * 用于测试后端服务的可达性
+ */
 @RestController
 @RequestMapping("/apis/ping")
 class Ping {

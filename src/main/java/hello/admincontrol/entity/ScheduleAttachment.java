@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
+/**
+ * 和会议附件表结构和功能都类似 ({@link MeetingAttachment})
+ */
 @Entity
 @Table(name = "tbl_schedule_attachment")
 @IdClass(ScheduleAttachment.ScheduleAttachmentId.class)

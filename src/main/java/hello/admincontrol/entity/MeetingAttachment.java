@@ -11,6 +11,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
+/**
+ * 会议附件表, 引用了会议表和附件表, 都是 多对一 的关系.
+ * 可以看成会议和附件多对多中关系属性.
+ * 会议中添加删除附件需要操作这张表.
+ */
 @Entity
 @Table(name = "tbl_meeting_attachment")
 @IdClass(MeetingAttachment.MeetingAttachmentId.class)
