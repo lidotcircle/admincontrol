@@ -1,4 +1,4 @@
-package hello.admincontrol.service;
+package hello.admincontrol.service.impl;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,12 @@ import hello.admincontrol.repository.MeetingRepository;
 import hello.admincontrol.repository.MeetingScheduleRepository;
 import hello.admincontrol.repository.MeetingUserRepository;
 import hello.admincontrol.repository.ScheduleAttachmentRepository;
-import hello.admincontrol.utils.ObjUtil;
+import hello.admincontrol.service.MeetingService;
+import hello.admincontrol.service.dto.meeting.DayResponseDTO;
+import hello.admincontrol.service.dto.meeting.LatestThirtyDayResponseDTO;
+import hello.admincontrol.service.dto.meeting.MeetingDetailResponseDTO;
+import hello.admincontrol.service.dto.meeting.MeetingPostDTO;
+import hello.admincontrol.service.dto.meeting.MeetingPutDTO;
 
 
 @Service
@@ -52,27 +58,27 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
 	@Override
-	public Collection<MeetingShort> latestCalenderThirtyDay(String username) {
+	public Collection<LatestThirtyDayResponseDTO> latestCalenderThirtyDay(String username) {
         final Instant nowins = Instant.now().truncatedTo(ChronoUnit.DAYS);
         final Date now = Date.from(nowins);
         final Date end = Date.from(nowins.plus(30, ChronoUnit.DAYS));
 
         final Collection<Meeting> qlist = this.meetingsBetween(username, now, end);
-        final Collection<MeetingShort> ans = new ArrayList<>();
-        qlist.forEach(meeting -> ans.add(new MeetingShort(meeting)));
+        final Collection<LatestThirtyDayResponseDTO> ans = new ArrayList<>();
+        qlist.forEach(meeting -> ans.add(new LatestThirtyDayResponseDTO(meeting)));
 
         return ans;
 	}
 
 	@Override
-	public Collection<MeetingMedium> calenderIn(String username, Date day) {
+	public Collection<DayResponseDTO> calenderIn(String username, Date day) {
         final Instant dateins = day.toInstant().truncatedTo(ChronoUnit.DAYS);
         final Date start = Date.from(dateins);
         final Date end =   Date.from(dateins.plus(1, ChronoUnit.DAYS));
 
         final Collection<Meeting> qlist = this.meetingsBetween(username, start, end);
-        final Collection<MeetingMedium> ans = new ArrayList<>();
-        qlist.forEach(meeting -> ans.add(new MeetingMedium(meeting)));
+        final Collection<DayResponseDTO> ans = new ArrayList<>();
+        qlist.forEach(meeting -> ans.add(new DayResponseDTO(meeting)));
 
         return ans;
 	}
@@ -91,12 +97,12 @@ public class MeetingServiceImpl implements MeetingService {
         return false;
     }
 	@Override
-	public MeetingDetail meetingDetail(String username, long meetingId) {
+	public MeetingDetailResponseDTO meetingDetail(String username, long meetingId) {
         Meeting mt = this.mtResp.findById(meetingId).orElseThrow(() -> new NotFound());
         if(username != null && !this.isMemberOfMeeting(mt, username)) {
             throw new Forbidden();
         }
-		return new MeetingDetail(mt);
+		return new MeetingDetailResponseDTO(mt);
 	}
 
     private MeetingAttachment addMeetingAttachment(Attachment at, Meeting mt) //{
@@ -127,17 +133,16 @@ public class MeetingServiceImpl implements MeetingService {
     } //}
 
 	@Override
-	public void createMeeting(MeetingCreation meeting) {
+	public void createMeeting(MeetingPostDTO meeting) {
         final Meeting mt = new Meeting();
-        ObjUtil.assignFields(mt, meeting);
+        BeanUtils.copyProperties(meeting, mt);
 
         this.mtResp.save(mt);
 	}
 
 	@Override
-	public void editMeeting(MeetingEdition meeting) throws NotFound {
+	public void editMeeting(MeetingPutDTO meeting) throws NotFound {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

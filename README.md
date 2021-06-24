@@ -4,6 +4,8 @@
 <!-- vim-markdown-toc GFM -->
 
 * [Start Backend](#start-backend)
+* [DTO类](#dto类)
+    * [DTO类的命名](#dto类的命名)
 * [异常处理](#异常处理)
 * [APIs](#apis)
     * [会议](#会议)
@@ -14,11 +16,34 @@
 
 <!-- vim-markdown-toc -->
 
+
 ### Start Backend
 
 ```bash
 mvn spring-boot:run
 ```
+
+
+### DTO类
+
+DTO类用于进程间进行数据对象的交换, 出现在`controller`和`service`层中.
+DTO类的定义在[service/dto](./src/main/java/hello/admincontrol/service/dto)目录下.
+DTO类通过注解对客户端的数据进行约束.
+
+#### DTO类的命名
+
+DTO类可以按照下面进行分类:
+
+* 请求
+  * Put
+  * Post
+* 返回(Response)
+
+所以规定DTO类的名称由3部分组成, 即`XXX (Put|Post|Response) DTO`.
+其中`XXX`表示DTO的业务名称可以由一个或者多个单词组成,
+第二部分为DTO的类别, 最后的`DTO`用于表示该类是一个DTO类.
+
+
 
 ### 异常处理
 
