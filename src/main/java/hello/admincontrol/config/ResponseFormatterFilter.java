@@ -15,6 +15,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -28,6 +30,7 @@ import hello.admincontrol.exception.BaseException;
  *     2. 不满足则不会改变原有的返回状态码
  */
 @Component
+@Order(value = Ordered.HIGHEST_PRECEDENCE)
 public class ResponseFormatterFilter extends OncePerRequestFilter {
     static class FilterServletOutputStream extends ServletOutputStream //{
     {
@@ -82,6 +85,13 @@ public class ResponseFormatterFilter extends OncePerRequestFilter {
         public byte[] getDataStream() {
             return this.filterOutput.getOutputStream().toByteArray();
         }
+
+        public void setDataStream(byte[] bytes) {
+            this.filterOutput.getOutputStream().reset();
+            try {
+                this.filterOutput.getOutputStream().write(bytes);
+            } catch (IOException e) {}
+        }
     } //}
 
     ObjectMapper objectMapper;
@@ -95,8 +105,13 @@ public class ResponseFormatterFilter extends OncePerRequestFilter {
                                     FilterChain chain) throws IOException, ServletException
     {
         ResponseWrapper responseWrapper = new ResponseWrapper(response);
-        chain.doFilter(request, responseWrapper);
 
+        try {
+            chain.doFilter(request, responseWrapper);
+        } catch (BaseException e) {
+            responseWrapper.setStatus(e.getCode());
+            responseWrapper.setDataStream(this.objectMapper.writeValueAsBytes(e));
+        }
         int status = responseWrapper.getStatus();
         byte[] data = responseWrapper.getDataStream();
 
@@ -118,6 +133,7 @@ public class ResponseFormatterFilter extends OncePerRequestFilter {
         }
 
         byte[] nj = this.objectMapper.writeValueAsBytes(new ResponseBodyFormat(status, msg, j));
+        response.setContentType("application/json");
         response.setContentLength(nj.length);
         response.getOutputStream().write(nj);
     }
