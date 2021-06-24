@@ -4,6 +4,8 @@
 <!-- vim-markdown-toc GFM -->
 
 * [Start Backend](#start-backend)
+    * [环境变量配置](#环境变量配置)
+    * [启动](#启动)
 * [DTO类](#dto类)
     * [DTO类的命名](#dto类的命名)
 * [异常处理](#异常处理)
@@ -18,6 +20,22 @@
 
 
 ### Start Backend
+
+#### 环境变量配置
+
+```bash
+PORT=       # 端口
+DB_URL=     # 数据库链接, 如`jdbc:mysql://localhost:3306/admincontrol`
+DB_USER=    # 数据库用户
+DB_PASS=    # 数据库密码
+REDIS_HOST= # Redis 地址, 如`localhost`
+REDIS_PORT= # Redis 端口
+REDIS_PASS= # Redis 密码
+
+JWT_SECRET= # JWT 密文字段
+```
+
+#### 启动
 
 ```bash
 mvn spring-boot:run
