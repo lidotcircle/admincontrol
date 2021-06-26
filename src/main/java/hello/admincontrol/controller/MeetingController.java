@@ -18,11 +18,13 @@ import hello.admincontrol.service.dto.meeting.DayResponseDTO;
 import hello.admincontrol.service.dto.meeting.LatestThirtyDayResponseDTO;
 import hello.admincontrol.service.dto.meeting.MeetingDetailResponseDTO;
 import hello.admincontrol.service.dto.meeting.MeetingPostDTO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 /**
  * 会议的增删改查接口
  */
+@Tag(name = "会议", description = "会议的增删改查")
 @RestController
 @RequestMapping("/apis/meeting")
 public class MeetingController {

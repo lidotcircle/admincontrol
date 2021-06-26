@@ -94,6 +94,11 @@ public class ResponseFormatterFilter extends OncePerRequestFilter {
                                     HttpServletResponse response, 
                                     FilterChain chain) throws IOException, ServletException
     {
+        if (!request.getRequestURI().startsWith("/apis/")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         ResponseWrapper responseWrapper = new ResponseWrapper(response);
         chain.doFilter(request, responseWrapper);
 
