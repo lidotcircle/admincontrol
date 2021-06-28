@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hello.admincontrol.utils.MyBeanUtils;
 import hello.admincontrol.entity.Attachment;
 import hello.admincontrol.entity.Meeting;
 import hello.admincontrol.entity.MeetingAttachment;
@@ -139,10 +140,16 @@ public class MeetingServiceImpl implements MeetingService {
 
         this.mtResp.save(mt);
 	}
-
+    /**
+     * 编辑会议
+     * @param meeting
+     */
 	@Override
-	public void editMeeting(MeetingPutDTO meeting) throws NotFound {
-		// TODO Auto-generated method stub
+	public void editMeeting(MeetingPutDTO meeting){
+	    final Meeting mt = mtResp.findById (meeting.getId()).get();
+	    MyBeanUtils.myCopyProperties(meeting, mt);
+//        BeanUtils.copyProperties(meeting, mt);
+        this.mtResp.save(mt);   //存入数据库
 	}
 
 	@Override

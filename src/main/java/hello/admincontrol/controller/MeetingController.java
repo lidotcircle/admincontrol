@@ -18,6 +18,7 @@ import hello.admincontrol.service.dto.meeting.DayResponseDTO;
 import hello.admincontrol.service.dto.meeting.LatestThirtyDayResponseDTO;
 import hello.admincontrol.service.dto.meeting.MeetingDetailResponseDTO;
 import hello.admincontrol.service.dto.meeting.MeetingPostDTO;
+import hello.admincontrol.service.dto.meeting.MeetingPutDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 
@@ -43,7 +44,15 @@ public class MeetingController {
         return mtService.meetingDetail(null, meetingId);
     }
 
+    /**
+     * 会议编辑接口
+     * @param mt
+     */
+    @PostMapping("/edit")
+    private void editMeeting(@RequestBody @Valid MeetingPutDTO mt){
 
+        this.mtService.editMeeting(mt);
+    }
     @GetMapping("/latest-thirty-days")
     private Collection<LatestThirtyDayResponseDTO> getLatestThirtyDays() {
         final String username = "ldy"; // TODO

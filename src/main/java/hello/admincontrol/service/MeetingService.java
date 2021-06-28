@@ -27,7 +27,7 @@ public interface MeetingService {
     void createMeeting(MeetingPostDTO meeting);
 
     /** 编辑会议 */
-    void editMeeting(MeetingPutDTO meeting) throws NotFound;
+    void editMeeting(MeetingPutDTO meeting);
 
     /** 添加会议的评论 */
     void addComment(String username, long meetingId, MeetingComment comment);
