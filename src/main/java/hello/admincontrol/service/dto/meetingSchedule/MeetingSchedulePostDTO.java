@@ -1,28 +1,14 @@
-package hello.admincontrol.entity;
+package hello.admincontrol.service.dto.meetingSchedule;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import hello.admincontrol.entity.Meeting;
+import hello.admincontrol.entity.ScheduleAttachment;
 
-import java.io.Serializable;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-
-/**
- * 会议的议程表, 和会议表是多对一的关系, 即每一个会议可以有多个议程
- */
-@Entity
-@Table(name = "tbl_meeting_schedule")
-public class MeetingSchedule implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-    @Id @GeneratedValue
+public class MeetingSchedulePostDTO {
+    @NotNull
     private long id;
     public long getId() {
         return this.id;
@@ -31,9 +17,6 @@ public class MeetingSchedule implements Serializable {
         this.id = id;
     }
 
-
-    @ManyToOne
-    @JsonIgnore
     private Meeting meeting;
     public Meeting getMeeting() {
         return this.meeting;
@@ -106,7 +89,6 @@ public class MeetingSchedule implements Serializable {
         this.csort = csort;
     }
 
-    @OneToMany(mappedBy = "schedule")
     private Collection<ScheduleAttachment> attachments;
     public Collection<ScheduleAttachment> getAttachments() {
         return this.attachments;
@@ -115,4 +97,3 @@ public class MeetingSchedule implements Serializable {
         this.attachments = attachments;
     }
 }
-

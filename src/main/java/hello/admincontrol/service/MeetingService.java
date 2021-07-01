@@ -2,8 +2,11 @@ package hello.admincontrol.service;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 
+import hello.admincontrol.entity.Meeting;
 import hello.admincontrol.entity.MeetingComment;
+import hello.admincontrol.entity.MeetingSchedule;
 import hello.admincontrol.exception.NotFound;
 import hello.admincontrol.service.dto.meeting.DayResponseDTO;
 import hello.admincontrol.service.dto.meeting.LatestThirtyDayResponseDTO;
@@ -29,11 +32,16 @@ public interface MeetingService {
     /** 编辑会议 */
     void editMeeting(MeetingPutDTO meeting);
 
+    Optional<Meeting> findMeetingById(Long meetingId);
+
     /** 添加会议的评论 */
     void addComment(String username, long meetingId, MeetingComment comment);
 
     /** 删除会议的评论 */
     void removeComment(long meetingId, int index);
+
+    /** 添加议程*/
+    MeetingSchedule addSchedule( MeetingSchedule schedule);
 
 }
 

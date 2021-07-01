@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,5 +185,16 @@ public class MeetingServiceImpl implements MeetingService {
 
         this.mtResp.save(mt);
     } //}
+
+    @Override
+    public Optional<Meeting> findMeetingById(Long meetingId){
+	    return this.mtResp.findById(meetingId);
+    }
+
+    /** 添加议程*/
+    @Override
+    public MeetingSchedule addSchedule( MeetingSchedule schedule){
+        return this.mtscResp.save(schedule);
+    }
 }
 

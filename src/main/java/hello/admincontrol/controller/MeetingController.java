@@ -4,14 +4,13 @@ import java.util.Collection;
 import java.util.Date;
 
 import javax.validation.Valid;
+
+import hello.admincontrol.entity.Meeting;
+import hello.admincontrol.entity.MeetingSchedule;
+import hello.admincontrol.service.dto.meetingSchedule.MeetingSchedulePostDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import hello.admincontrol.service.MeetingService;
 import hello.admincontrol.service.dto.meeting.DayResponseDTO;
@@ -64,6 +63,16 @@ public class MeetingController {
             @RequestParam() @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
         final String username = "ldy"; // TODO
         return this.mtService.calenderIn(username, date);
+    }
+
+    @PostMapping("/{meetingId}/schedule")
+    private MeetingSchedule addSchedule(
+            @PathVariable Long meetingId,
+            @RequestBody  MeetingSchedule schedule
+            ){
+        Meeting meeting = mtService.findMeetingById(meetingId).get();
+        schedule.setMeeting(meeting);
+        return mtService.addSchedule(schedule);
     }
 }
 
