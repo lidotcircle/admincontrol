@@ -1,5 +1,7 @@
 package hello.admincontrol.entity;
 
+import org.hibernate.annotations.Proxy;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Collection;
@@ -18,8 +20,10 @@ import javax.persistence.Table;
 /**
  * 会议表
  */
+@Proxy(lazy = false)
 @Entity
 @Table(name = "tbl_meeting")
+
 public class Meeting implements Serializable {
 	private static final long serialVersionUID = 1L;
 

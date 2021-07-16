@@ -12,7 +12,7 @@ import hello.admincontrol.entity.MeetingSchedule;
 /**
  * 会议修改
  */
-public class MeetingPutDTO extends MeetingPostDTO
+public class MeetingPutDTO
 {
     @NotNull
     private long id;
