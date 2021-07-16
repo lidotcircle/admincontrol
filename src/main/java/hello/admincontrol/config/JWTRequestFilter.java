@@ -20,6 +20,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 
 /**
  * 利用 JSON Web Token 验证用户身份
+ * !!! 只验证URI以`/apis/`开头的请求
  */
 @Component
 @Order(value = Ordered.LOWEST_PRECEDENCE)
@@ -43,7 +44,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
         throws ServletException, IOException {
         log.info("filtering HTTP Request for: " + request.getMethod() + " " + request.getRequestURI());
 
-        boolean bypass = false;
+        boolean bypass = !request.getRequestURI().startsWith("/apis/");
         for(String uri: bypassURIs) {
             if(request.getRequestURI().startsWith(uri)) {
                 bypass = true;

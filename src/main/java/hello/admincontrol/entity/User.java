@@ -39,6 +39,14 @@ public class User implements Serializable {
         this.userName = userName;
     }
 
+    private String name;
+    public String getName() {
+        return this.name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Column(name = "gmt_created", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)
     private Date createdDate;
     public Date getCreatedDate() {

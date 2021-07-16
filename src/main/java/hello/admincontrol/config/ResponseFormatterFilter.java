@@ -28,6 +28,7 @@ import hello.admincontrol.exception.BaseException;
  * HTTP Status Code:
  *     1. 如果返回体的格式符合 BaseException 那么用 BaseException 中的 code 字段
  *     2. 不满足则不会改变原有的返回状态码
+ * !!! 只作用在URI已`/apis/`开头的请求
  */
 @Component
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
@@ -104,6 +105,11 @@ public class ResponseFormatterFilter extends OncePerRequestFilter {
                                     HttpServletResponse response, 
                                     FilterChain chain) throws IOException, ServletException
     {
+        if (!request.getRequestURI().startsWith("/apis/")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         ResponseWrapper responseWrapper = new ResponseWrapper(response);
 
         try {

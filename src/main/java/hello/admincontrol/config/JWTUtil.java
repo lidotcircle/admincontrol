@@ -36,16 +36,19 @@ public class JWTUtil {
         return expiration.before(new Date());
     }
 
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + jwtAliveTimeFrame_s * 1000))
+
+    public String generateToken(String subject,Map<String, Object> claims, long liveMs) {
+        return Jwts.builder()
+            .setClaims(claims)
+            .setSubject(subject)
+            .setIssuedAt(new Date(System.currentTimeMillis()))
+            .setExpiration(new Date(System.currentTimeMillis() + liveMs))
             .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
-
-    public String generateToken(String username) {
+    public String generateToken(String subject) {
         Map<String, Object> claims = new HashMap<>();
-        return this.doGenerateToken(claims, username);
+        return this.generateToken(subject, claims, jwtAliveTimeFrame_s * 1000);
     }
 
     public Boolean validateToken(String token, String username) {
@@ -64,6 +67,10 @@ public class JWTUtil {
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = this.getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
+    }
+
+    public Object getObjectFromToken(String token, String field) {
+        return this.getClaimFromToken(token, claims -> claims.get(field));
     }
 }
 

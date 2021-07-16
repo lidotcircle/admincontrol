@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 /**
  * 用于测试后端服务的可达性
  */
+@Tag(name = "测试及获取版本信息")
 @RestController
 @RequestMapping("/apis/ping")
 class Ping {
