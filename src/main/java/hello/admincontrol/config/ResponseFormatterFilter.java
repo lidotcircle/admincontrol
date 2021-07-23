@@ -19,6 +19,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.NestedServletException;
 
 import hello.admincontrol.exception.BaseException;
 
@@ -93,6 +94,9 @@ public class ResponseFormatterFilter extends OncePerRequestFilter {
                 this.filterOutput.getOutputStream().write(bytes);
             } catch (IOException e) {}
         }
+
+        @Override
+        public void flushBuffer() {}
     } //}
 
     ObjectMapper objectMapper;
@@ -117,7 +121,18 @@ public class ResponseFormatterFilter extends OncePerRequestFilter {
         } catch (BaseException e) {
             responseWrapper.setStatus(e.getCode());
             responseWrapper.setDataStream(this.objectMapper.writeValueAsBytes(e));
+        } catch (NestedServletException e) {
+            var ex = e.getRootCause();
+
+            if (ex instanceof BaseException) {
+                var exx = (BaseException)ex;
+                responseWrapper.setStatus(exx.getCode());
+                responseWrapper.setDataStream(this.objectMapper.writeValueAsBytes(exx));
+            } else {
+                throw e;
+            }
         }
+
         int status = responseWrapper.getStatus();
         byte[] data = responseWrapper.getDataStream();
 
@@ -141,6 +156,7 @@ public class ResponseFormatterFilter extends OncePerRequestFilter {
         byte[] nj = this.objectMapper.writeValueAsBytes(new ResponseBodyFormat(status, msg, j));
         response.setContentType("application/json");
         response.setContentLength(nj.length);
+        response.flushBuffer();
         response.getOutputStream().write(nj);
     }
 }
