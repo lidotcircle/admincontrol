@@ -1,7 +1,10 @@
 package hello.admincontrol.service.impl;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +29,34 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void createUser(UserPostDTO user) {
-        final User newUser = new User();
-        BeanUtils.copyProperties(user, newUser);
-        newUser.setPassword(this.passwordEncoder.encode(user.getPassword()));
-        this.userRepository.save(newUser);
+        try {
+            final User newUser = new User();
+            BeanUtils.copyProperties(user, newUser);
+            newUser.setThirdPartyAccountType("none");
+            newUser.setPassword(this.passwordEncoder.encode(user.getPassword()));
+            this.userRepository.save(newUser);
+        } catch (DataIntegrityViolationException e) {
+            if (e.getRootCause() instanceof SQLIntegrityConstraintViolationException
+                    && e.getRootCause().getMessage().contains("Duplicate")) 
+            {
+                var rootMsg = e.getRootCause().getMessage();
+
+                if(rootMsg.contains(String.format("'%s'", user.getPhone()))) {
+                    throw new Forbidden("手机号已注册");
+                }
+                else if(rootMsg.contains(String.format("'%s'", user.getEmail()))) {
+                    throw new Forbidden("邮箱已注册");
+                }
+                else if(rootMsg.contains(String.format("'%s'", user.getUserName()))) {
+                    throw new Forbidden("用户名已注册");
+                }
+                else {
+                    throw e;
+                }
+            } else {
+                throw e;
+            }
+        }
 	}
 
 	@Override
@@ -69,6 +96,14 @@ public class UserServiceImpl implements UserService {
 
         u.setPassword(this.passwordEncoder.encode(newPass.getNewPassword()));
         this.userRepository.save(u);
+	}
+
+	@Override
+	public boolean validateUserPassowrd(String username, String password) {
+        final var u = this.userRepository.findByUserName(username)
+            .orElseThrow(() -> new NotFound("用户不存在"));
+
+        return this.passwordEncoder.matches(password, u.getPassword());
 	}
 }
 

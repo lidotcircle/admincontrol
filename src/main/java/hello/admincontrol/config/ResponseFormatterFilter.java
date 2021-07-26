@@ -149,7 +149,7 @@ public class ResponseFormatterFilter extends OncePerRequestFilter {
             try {
                 j = this.objectMapper.readTree(data);
             } catch (JsonProcessingException e){
-                msg = new String(data, "UTF-8");
+                j = this.objectMapper.valueToTree(new String(data, "UTF-8"));
             }
         }
 

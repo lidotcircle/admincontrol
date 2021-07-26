@@ -6,6 +6,7 @@ public class BadRequest extends BaseException {
 
 	public BadRequest(String reason) {
         super(reason);
+        this.code = 400;
     }
 
     public BadRequest() {

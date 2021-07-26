@@ -16,6 +16,9 @@ public interface UserService {
     /** 修改用户密码 */
     void updateUserPassword(UserPasswordPutDTO newPass);
 
+    /** 验证用户密码 */
+    boolean validateUserPassowrd(String username, String password);
+
     /** 删除用户 */
     void deleteUser(String username);
 

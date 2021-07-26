@@ -6,6 +6,7 @@ public class NotFound extends BaseException {
 
     public NotFound(String reason) {
         super(reason);
+        this.code = 404;
     }
 
     public NotFound() {

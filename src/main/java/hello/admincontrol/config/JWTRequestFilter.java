@@ -33,10 +33,10 @@ public class JWTRequestFilter extends OncePerRequestFilter {
     static {
         bypassURIs = new ArrayList<String>();
         bypassURIs.add("/apis/ping");
-        bypassURIs.add("/apis/auth/user");
+        bypassURIs.add("/apis/user/register");
         bypassURIs.add("/apis/auth/refresh-token");
         bypassURIs.add("/apis/auth/jwt");
-        bypassURIs.add("/apis/auth/password");
+        bypassURIs.add("/apis/auth-token");
     }
 
     @Override

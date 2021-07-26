@@ -6,6 +6,7 @@ public class Unauthorized extends BaseException {
 
     public Unauthorized(String reason) {
         super(reason);
+        this.code = 401;
     }
 
     public Unauthorized() {

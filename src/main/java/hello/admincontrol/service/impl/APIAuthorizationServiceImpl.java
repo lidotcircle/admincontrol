@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import hello.admincontrol.OperationType;
 import hello.admincontrol.config.JWTUtil;
+import hello.admincontrol.exception.Forbidden;
 import hello.admincontrol.service.APIAuthorizationService;
 
 
@@ -19,6 +20,10 @@ public class APIAuthorizationServiceImpl implements APIAuthorizationService {
 
 	@Override
 	public String issueTo(String subject, OperationType operationType, int timeoutMs) {
+        if(subject == null) {
+            throw new Forbidden("禁止无身份访问授权");
+        }
+
         final Map<String, Object> claims = new HashMap<>();
         claims.put("operationType", operationType);
         return this.jwt.generateToken(subject, claims, timeoutMs);
@@ -29,7 +34,7 @@ public class APIAuthorizationServiceImpl implements APIAuthorizationService {
         if (this.jwt.validateToken(token, subject)) {
             return false;
         }
-        final OperationType ope = (OperationType)this.jwt.getObjectFromToken(token, "operationType");
+        final OperationType ope = OperationType.valueOf((String)(this.jwt.getObjectFromToken(token, "operationType")));
         return operationType == ope;
 	}
 }

@@ -6,12 +6,14 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hello.admincontrol.OperationType;
@@ -36,9 +38,9 @@ public class UserController {
     private APIAuthorizationService authorizationService;
 
     @Operation(summary = "注册")
-    @PostMapping()
-    public void PostUser(@Valid @RequestBody UserPostDTO request, 
-                         @RequestHeader("X-Authorization") String authorToken) //{
+    @PostMapping("/register")
+    public void PostUser(@RequestBody @Valid UserPostDTO request, 
+                         @RequestHeader(name = "X-Authorization", required = true) String authorToken) //{
     {
         if (request.getPhone() != null && request.getEmail() != null) {
             throw new Forbidden("不可在注册时同时指定手机和邮箱");
@@ -83,6 +85,19 @@ public class UserController {
         }
 
         this.userService.updateUserPassword(request);
+    } //}
+
+    @Operation(summary = "注销用户")
+    @DeleteMapping()
+    public void deleteUser(HttpServletRequest httpreq, @RequestParam() String password) //{
+    {
+        final String username = (String)httpreq.getAttribute("username");
+
+        if(this.userService.validateUserPassowrd(username, password)) {
+            this.userService.deleteUser(username);
+        } else {
+            throw new Unauthorized("密码错误");
+        }
     } //}
 }
 

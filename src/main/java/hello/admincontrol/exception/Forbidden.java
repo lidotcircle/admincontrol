@@ -6,6 +6,7 @@ public class Forbidden extends BaseException {
 
 	public Forbidden(String reason) {
         super(reason);
+        this.code = 403;
     }
 
     public Forbidden() {

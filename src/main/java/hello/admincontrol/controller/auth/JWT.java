@@ -2,6 +2,7 @@ package hello.admincontrol.controller.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import hello.admincontrol.exception.Unauthorized;
 @Tag(name = "JWT Credential", description = "用户身份认证")
 @SecurityRequirements
 @RestController()
+@RequestMapping("/apis/auth")
 class Jwt {
     @Autowired
     private RefreshTokenService refreshTokenService;
@@ -36,7 +38,7 @@ class Jwt {
     }
 
     @Operation(summary = "获取JSON Web Token")
-    @GetMapping("/apis/auth/jwt")
+    @GetMapping("/jwt")
     private ResponseEntity<?> getJwt(@RequestParam("refreshToken") String refreshToken) {
         var token = this.refreshTokenService.getRefreshToken(refreshToken)
                                             .orElseThrow(() -> new Unauthorized("无效的Token"));

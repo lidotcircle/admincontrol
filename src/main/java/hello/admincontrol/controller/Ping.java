@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import hello.admincontrol.exception.NotFound;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 
@@ -57,6 +58,11 @@ class Ping {
     private PingResp ping() {
         log.info("Recieve a ping");
         return new PingResp();
+    }
+
+    @GetMapping("/not-found")
+    private void notFoundTest() {
+        throw new NotFound();
     }
 }
 
