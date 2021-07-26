@@ -27,16 +27,6 @@ class Jwt {
     @Autowired
     private AuthService authService;
 
-    static public class JwtResponse {
-        private String jwtToken;
-        public String getJwtToken() {
-            return this.jwtToken;
-        }
-        public void setJwtToken(String jwtToken) {
-            this.jwtToken = jwtToken;
-        }
-    }
-
     @Operation(summary = "获取JSON Web Token")
     @GetMapping("/jwt")
     private ResponseEntity<?> getJwt(@RequestParam("refreshToken") String refreshToken) {

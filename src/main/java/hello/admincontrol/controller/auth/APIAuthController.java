@@ -51,7 +51,7 @@ public class APIAuthController {
         if(subject == null) {
             subject = "dummy";
         }
-        final var token = this.authTokenService.issueTo(subject, op, 1000 * 60);
+        final var token = this.authTokenService.issueTo(subject, op, 1000 * 60, 1);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 }

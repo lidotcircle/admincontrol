@@ -27,6 +27,18 @@ export async function login(username: string, password: string): Promise<string>
     return respObj["data"];
 }
 
+export async function logout(token: string): Promise<void> {
+    const url = new URL(API.RefreshToken.deleteToken);
+    url.search = new URLSearchParams({refreshToken: token}).toString();
+
+    const resp = await fetch(url, {
+        method: "DELETE",
+    });
+    if (resp.status >= 400) {
+        throw await resp.text();
+    }
+}
+
 export async function jwt(token: string): Promise<string> {
     const url = new URL(API.JWT.get);
     url.search = new URLSearchParams({refreshToken: token}).toString();
