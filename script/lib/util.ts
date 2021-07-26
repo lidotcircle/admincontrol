@@ -1,7 +1,5 @@
 import { Response } from 'node-fetch';
 
-export * from './request';
-
 export function searchArg(leader: string, follow: boolean, argv: string[]): [string | boolean, string[]] //{
 {
     let o1 = null;
