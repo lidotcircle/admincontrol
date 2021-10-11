@@ -1,12 +1,15 @@
 package hello.admincontrol.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.GeneratedValue;
@@ -117,6 +120,15 @@ public class User implements Serializable {
     }
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<Role> roles;
+    public Collection<Role> getRoles() {
+        return this.roles;
+    }
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 }
 

@@ -1,6 +1,7 @@
 package hello.admincontrol.service.impl;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import hello.admincontrol.entity.Role;
 import hello.admincontrol.entity.User;
 import hello.admincontrol.exception.Forbidden;
 import hello.admincontrol.exception.NotFound;
 import hello.admincontrol.repository.UserRepository;
+import hello.admincontrol.service.RoleService;
 import hello.admincontrol.service.UserService;
 import hello.admincontrol.service.dto.user.UserPasswordPutDTO;
 import hello.admincontrol.service.dto.user.UserPostDTO;
@@ -26,6 +29,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleService roleService;
 
 	@Override
 	public void createUser(UserPostDTO user) {
@@ -73,6 +79,10 @@ public class UserServiceImpl implements UserService {
         this.userRepository.deleteByUserName(username);
 	}
 
+	private Optional<User> getUser(String username) {
+        return  this.userRepository.findByUserName(username);
+	}
+
 	@Override
 	public UserResponseDTO getUserInfo(String username) {
         final var u = this.userRepository.findByUserName(username)
@@ -104,6 +114,20 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new NotFound("用户不存在"));
 
         return this.passwordEncoder.matches(password, u.getPassword());
+	}
+
+	@Override
+	public boolean hasPermission(String username, String link, String method) {
+        var usero = this.getUser(username);
+        if(usero.isEmpty()) return false;
+        var user = usero.get();
+
+        for(final Role role: user.getRoles()) {
+            if(this.roleService.hasPermissionInLink(role.getRoleName(), link, method)) {
+                return true;
+            }
+        }
+        return false;
 	}
 }
 

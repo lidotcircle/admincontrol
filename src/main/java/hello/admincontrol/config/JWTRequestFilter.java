@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import hello.admincontrol.exception.BadRequest;
+import hello.admincontrol.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 
 
@@ -27,6 +28,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 public class JWTRequestFilter extends OncePerRequestFilter {
     @Autowired
     private JWTUtil jwtUtil;
+    @Autowired
+    private UserService userService;
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JWTRequestFilter.class);
     private static final ArrayList<String> bypassURIs;
@@ -76,6 +79,14 @@ public class JWTRequestFilter extends OncePerRequestFilter {
                 }
             } else {
                 throw new BadRequest("需要 JSON Web Token 进行身份认证");
+            }
+
+            var uri = request.getRequestURI();
+            if(uri.endsWith("/")) uri = uri.substring(0, uri.length() - 1);
+            final var method = request.getMethod().toUpperCase();
+            if (!this.userService.hasPermission(username, uri, method)) {
+                log.info("Deny {} to Access {} with {} method", username, uri, method);
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "No Permission");
             }
         }
 

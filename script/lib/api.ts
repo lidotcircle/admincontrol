@@ -33,6 +33,28 @@ export module API {
         export const deleteToken = `${endpoint}/auth/refresh-token`;
     }
 
+    export module Role {
+        export const post = `${endpoint}/role`;
+        export const deleteRole = `${endpoint}/role`;
+        export const listRole = `${endpoint}/role/list`;
+
+        export module Perm {
+            export const get = `${endpoint}/role/perm`;
+            export const post = `${endpoint}/role/perm`;
+            export const deletePerm = `${endpoint}/role/perm`;
+            export const getList = `${endpoint}/role/perm/list`;
+        }
+    }
+
+    export module Perm {
+        export const get = `${endpoint}/perm`;
+        export const post = `${endpoint}/perm`;
+        export const put = `${endpoint}/perm`;
+        export const deletePerm = `${endpoint}/perm`;
+        export const permTree = `${endpoint}/perm/tree`;
+        export const rolePerm = `${endpoint}/perm/role`;
+    }
+
     export module JWT {
         export const get = `${endpoint}/auth/jwt`;
     }

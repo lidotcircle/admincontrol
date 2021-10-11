@@ -24,5 +24,8 @@ public interface UserService {
 
     /** 获取用户信息 */
     UserResponseDTO getUserInfo(String username);
+
+    /** 测试是否有权限 */
+    boolean hasPermission(String username, String link, String method);
 }
 
